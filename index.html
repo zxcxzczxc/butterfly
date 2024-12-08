@@ -75,14 +75,17 @@
         });
 
         function updateButterfly(x, y, dx, dy) {
-            // Bounce off walls
-            if (x <= 0 || x >= window.innerWidth - 50) {
-                dx = -dx;
-                x = Math.max(0, Math.min(x, window.innerWidth - 50));
+            const butterflySize = 50; // Account for butterfly size
+            const padding = 10; // Additional padding from screen edges
+
+            // Bounce off walls with stricter boundaries
+            if (x <= padding || x >= window.innerWidth - butterflySize - padding) {
+                dx = -dx * 0.9; // Add slight damping
+                x = Math.max(padding, Math.min(x, window.innerWidth - butterflySize - padding));
             }
-            if (y <= 0 || y >= window.innerHeight - 50) {
-                dy = -dy;
-                y = Math.max(0, Math.min(y, window.innerHeight - 50));
+            if (y <= padding || y >= window.innerHeight - butterflySize - padding) {
+                dy = -dy * 0.9; // Add slight damping
+                y = Math.max(padding, Math.min(y, window.innerHeight - butterflySize - padding));
             }
 
             return { x: x + dx, y: y + dy, dx, dy };
