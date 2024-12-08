@@ -9,7 +9,7 @@
 <body>
     <div id="butterfly1" class="butterfly">🦋</div>
     <div id="butterfly2" class="butterfly">🦋</div>
-    <audio id="background-music" controls>
+    <audio id="background-music" autoplay controls>
         <source src="./audio/your-music.mp3.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -144,6 +144,24 @@
             butterfly1Pos.y = Math.min(butterfly1Pos.y, window.innerHeight - 50);
             butterfly2Pos.x = Math.min(butterfly2Pos.x, window.innerWidth - 50);
             butterfly2Pos.y = Math.min(butterfly2Pos.y, window.innerHeight - 50);
+        });
+
+        // Attempt to play audio on page load
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('background-music');
+            const playPromise = audio.play();
+
+            // Handle potential autoplay restrictions
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log('Autoplay was prevented:', error);
+                    // Optionally, add a user interaction listener as a fallback
+                    document.addEventListener('click', function enableAudio() {
+                        audio.play();
+                        document.removeEventListener('click', enableAudio);
+                    });
+                });
+            }
         });
     </script>
 </body>
