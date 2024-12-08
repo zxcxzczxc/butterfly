@@ -115,8 +115,24 @@
         // Immediately set initial positions and start animation
         const butterfly1 = document.getElementById('butterfly1');
         const butterfly2 = document.getElementById('butterfly2');
-        butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px)`;
-        butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px)`;
+        
+        // Explicit positioning with large, visible placement
+        butterfly1.style.left = '50%';
+        butterfly1.style.top = '50%';
+        butterfly1.style.transform = 'translate(-50%, -50%)';
+        
+        butterfly2.style.left = '60%';
+        butterfly2.style.top = '60%';
+        butterfly2.style.transform = 'translate(-50%, -50%)';
+        
+        // Force visibility
+        butterfly1.style.display = 'block';
+        butterfly2.style.display = 'block';
+        butterfly1.style.visibility = 'visible';
+        butterfly2.style.visibility = 'visible';
+        
+        console.log('Butterfly 1 final style:', butterfly1.style.cssText);
+        console.log('Butterfly 2 final style:', butterfly2.style.cssText);
 
         // Audio context setup
         let audioContext, analyser, source;
