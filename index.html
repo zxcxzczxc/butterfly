@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Moon Reflection</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="butterfly1" class="butterfly">🦋</div>
+    <div id="butterfly2" class="butterfly">🦋</div>
+    <audio id="background-music" controls>
+        <source src="./audio/your-music.mp3.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const butterfly1 = document.getElementById('butterfly1');
+        const butterfly2 = document.getElementById('butterfly2');
+        const audio = document.getElementById('background-music');
+
+        // Function to get random position within window
+        function getRandomPosition() {
+            return {
+                x: Math.random() * (window.innerWidth - 100),
+                y: Math.random() * (window.innerHeight - 100),
+                dx: (Math.random() - 0.5) * 4,
+                dy: (Math.random() - 0.5) * 4
+            };
+        }
+
+        // Initial random positions
+        let butterfly1Pos = getRandomPosition();
+        let butterfly2Pos = getRandomPosition();
+
+        // Immediately set initial positions and start animation
+        butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px)`;
+        butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px)`;
+
+        // Audio context setup
+        let audioContext, analyser, source;
+        let isAudioInitialized = false;
+
+        function setupAudioContext() {
+            if (isAudioInitialized) return;
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+
+                source = audioContext.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                isAudioInitialized = true;
+                console.log('Audio context successfully set up');
+            } catch (error) {
+                console.error('Error setting up audio context:', error);
+            }
+        }
+
+        // Initialize audio on first user interaction
+        audio.addEventListener('play', function initOnce() {
+            if (!isAudioInitialized) {
+                setupAudioContext();
+                audio.removeEventListener('play', initOnce);
+            }
+        });
+
+        const bufferLength = 256;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function updateButterfly(x, y, dx, dy) {
+            // Bounce off walls
+            if (x <= 0 || x >= window.innerWidth - 50) {
+                dx = -dx;
+                x = Math.max(0, Math.min(x, window.innerWidth - 50));
+            }
+            if (y <= 0 || y >= window.innerHeight - 50) {
+                dy = -dy;
+                y = Math.max(0, Math.min(y, window.innerHeight - 50));
+            }
+
+            return { x: x + dx, y: y + dy, dx, dy };
+        }
+
+        let animationFrameId;
+        function animate() {
+            // Get audio data if analyser is available
+            if (analyser) {
+                analyser.getByteFrequencyData(dataArray);
+            }
+
+            // Calculate average volume
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                sum += dataArray[i];
+            }
+            const average = sum / dataArray.length / 255;
+
+            // Update butterfly 1
+            const butterfly1Update = updateButterfly(
+                butterfly1Pos.x, 
+                butterfly1Pos.y, 
+                butterfly1Pos.dx, 
+                butterfly1Pos.dy
+            );
+            butterfly1Pos.x = butterfly1Update.x;
+            butterfly1Pos.y = butterfly1Update.y;
+            butterfly1Pos.dx = butterfly1Update.dx;
+            butterfly1Pos.dy = butterfly1Update.dy;
+
+            // Update butterfly 2
+            const butterfly2Update = updateButterfly(
+                butterfly2Pos.x, 
+                butterfly2Pos.y, 
+                butterfly2Pos.dx, 
+                butterfly2Pos.dy
+            );
+            butterfly2Pos.x = butterfly2Update.x;
+            butterfly2Pos.y = butterfly2Update.y;
+            butterfly2Pos.dx = butterfly2Update.dx;
+            butterfly2Pos.dy = butterfly2Update.dy;
+
+            // Update visual representation with audio reactivity
+            const baseSize = 30;
+            const size1 = baseSize + (average * 20);
+            const size2 = baseSize + (average * 20);
+
+            butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px) scale(${size1 / baseSize})`;
+            butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px) scale(${size2 / baseSize})`;
+
+            // Continue animation
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Start animation immediately
+        animate();
+
+        // Resize handler to keep butterflies in view
+        window.addEventListener('resize', () => {
+            butterfly1Pos.x = Math.min(butterfly1Pos.x, window.innerWidth - 50);
+            butterfly1Pos.y = Math.min(butterfly1Pos.y, window.innerHeight - 50);
+            butterfly2Pos.x = Math.min(butterfly2Pos.x, window.innerWidth - 50);
+            butterfly2Pos.y = Math.min(butterfly2Pos.y, window.innerHeight - 50);
+        });
+    </script>
+</body>
+</html>
