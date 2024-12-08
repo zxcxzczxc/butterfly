@@ -15,8 +15,13 @@
     </audio>
 
     <script>
+        console.log('Script is running');
+        console.log('Butterfly1:', document.getElementById('butterfly1'));
+        console.log('Butterfly2:', document.getElementById('butterfly2'));
+
         // Star generation function
         function createStars() {
+            console.log('Creating stars');
             const starCount = 200; // Adjust number of stars
             const container = document.body;
 
@@ -38,17 +43,20 @@
 
                 container.appendChild(star);
             }
+            console.log('Stars created');
         }
-
-        // Call star generation when page loads
-        window.addEventListener('load', createStars);
-
-        const butterfly1 = document.getElementById('butterfly1');
-        const butterfly2 = document.getElementById('butterfly2');
-        const audio = document.getElementById('background-music');
 
         // Ensure butterflies are visible and positioned
         function initializeButterflies() {
+            console.log('Initializing butterflies');
+            const butterfly1 = document.getElementById('butterfly1');
+            const butterfly2 = document.getElementById('butterfly2');
+
+            if (!butterfly1 || !butterfly2) {
+                console.error('Butterflies not found!');
+                return;
+            }
+
             // Set initial positions
             butterfly1.style.position = 'fixed';
             butterfly2.style.position = 'fixed';
@@ -61,10 +69,34 @@
             butterfly1.style.top = `${Math.random() * maxHeight}px`;
             butterfly2.style.left = `${Math.random() * maxWidth}px`;
             butterfly2.style.top = `${Math.random() * maxHeight}px`;
+
+            // Ensure visibility
+            butterfly1.style.opacity = '1';
+            butterfly2.style.opacity = '1';
+            butterfly1.style.zIndex = '1000';
+            butterfly2.style.zIndex = '1000';
+
+            console.log('Butterflies initialized');
         }
 
-        // Call initialization on load
-        window.addEventListener('load', initializeButterflies);
+        // Call initializations on load
+        window.addEventListener('load', () => {
+            console.log('Window loaded');
+            createStars();
+            initializeButterflies();
+        });
+
+        // Fallback initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded');
+            const butterfly1 = document.getElementById('butterfly1');
+            const butterfly2 = document.getElementById('butterfly2');
+            
+            if (butterfly1) butterfly1.style.display = 'block';
+            if (butterfly2) butterfly2.style.display = 'block';
+        });
+
+        const audio = document.getElementById('background-music');
 
         // Function to get random position within window
         function getRandomPosition() {
@@ -81,6 +113,8 @@
         let butterfly2Pos = getRandomPosition();
 
         // Immediately set initial positions and start animation
+        const butterfly1 = document.getElementById('butterfly1');
+        const butterfly2 = document.getElementById('butterfly2');
         butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px)`;
         butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px)`;
 

@@ -13,6 +13,18 @@ body, html {
     overflow: hidden;
 }
 
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
 .music-controls {
     position: fixed;
     bottom: 20px;
@@ -43,21 +55,23 @@ input[type="range"] {
     cursor: pointer;
 }
 
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .butterfly {
     position: fixed;
-    font-size: 30px;
+    font-size: 50px;
     pointer-events: none;
     z-index: 1000;
+    opacity: 1;
     filter: 
         drop-shadow(0 0 5px rgba(116, 87, 238, 0.5))
-        brightness(0) 
-        saturate(100%) 
-        invert(40%) 
-        sepia(98%) 
-        saturate(1902%) 
-        hue-rotate(233deg) 
-        brightness(97%);
-    transition: transform 0.05s linear;
+        brightness(1);
 }
 
 audio {
