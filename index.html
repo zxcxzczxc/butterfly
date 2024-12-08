@@ -15,9 +15,56 @@
     </audio>
 
     <script>
+        // Star generation function
+        function createStars() {
+            const starCount = 200; // Adjust number of stars
+            const container = document.body;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+
+                // Random positioning
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+
+                // Random size between 1-3 pixels
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // Optional: slight twinkle effect
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+
+                container.appendChild(star);
+            }
+        }
+
+        // Call star generation when page loads
+        window.addEventListener('load', createStars);
+
         const butterfly1 = document.getElementById('butterfly1');
         const butterfly2 = document.getElementById('butterfly2');
         const audio = document.getElementById('background-music');
+
+        // Ensure butterflies are visible and positioned
+        function initializeButterflies() {
+            // Set initial positions
+            butterfly1.style.position = 'fixed';
+            butterfly2.style.position = 'fixed';
+
+            // Randomize initial positions
+            const maxWidth = window.innerWidth - 50;
+            const maxHeight = window.innerHeight - 50;
+
+            butterfly1.style.left = `${Math.random() * maxWidth}px`;
+            butterfly1.style.top = `${Math.random() * maxHeight}px`;
+            butterfly2.style.left = `${Math.random() * maxWidth}px`;
+            butterfly2.style.top = `${Math.random() * maxHeight}px`;
+        }
+
+        // Call initialization on load
+        window.addEventListener('load', initializeButterflies);
 
         // Function to get random position within window
         function getRandomPosition() {
@@ -80,8 +127,9 @@
         const bufferLength = 256;
         const dataArray = new Uint8Array(bufferLength);
 
+        // Modify butterfly movement to stay within screen
         function updateButterfly(x, y, dx, dy) {
-            // Bounce off walls
+            // Bounce off walls with some padding
             if (x <= 0 || x >= window.innerWidth - 50) {
                 dx = -dx;
                 x = Math.max(0, Math.min(x, window.innerWidth - 50));
