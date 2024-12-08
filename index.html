@@ -5,105 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>x_x</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
 </head>
 <body>
     <div id="butterfly1" class="butterfly">🦋</div>
     <div id="butterfly2" class="butterfly">🦋</div>
+    <div id="butterfly3" class="butterfly">🦋</div>
     <audio id="background-music" controls>
         <source src="./audio/your-music.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <script>
-        console.log('Script is running');
-        console.log('Butterfly1:', document.getElementById('butterfly1'));
-        console.log('Butterfly2:', document.getElementById('butterfly2'));
-
-        // Star generation function
-        function createStars() {
-            console.log('Creating stars');
-            const starCount = 200; // Adjust number of stars
-            const container = document.body;
-
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-
-                // Random positioning
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-
-                // Random size between 1-3 pixels
-                const size = Math.random() * 2 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-
-                // Optional: slight twinkle effect
-                star.style.opacity = Math.random() * 0.7 + 0.3;
-
-                container.appendChild(star);
-            }
-            console.log('Stars created');
-        }
-
-        // Ensure butterflies are visible and positioned
-        function initializeButterflies() {
-            console.log('Initializing butterflies');
-            const butterfly1 = document.getElementById('butterfly1');
-            const butterfly2 = document.getElementById('butterfly2');
-
-            if (!butterfly1 || !butterfly2) {
-                console.error('Butterflies not found!');
-                return;
-            }
-
-            // Set initial positions
-            butterfly1.style.position = 'fixed';
-            butterfly2.style.position = 'fixed';
-
-            // Randomize initial positions
-            const maxWidth = window.innerWidth - 50;
-            const maxHeight = window.innerHeight - 50;
-
-            butterfly1.style.left = `${Math.random() * maxWidth}px`;
-            butterfly1.style.top = `${Math.random() * maxHeight}px`;
-            butterfly2.style.left = `${Math.random() * maxWidth}px`;
-            butterfly2.style.top = `${Math.random() * maxHeight}px`;
-
-            // Ensure visibility
-            butterfly1.style.opacity = '1';
-            butterfly2.style.opacity = '1';
-            butterfly1.style.zIndex = '1000';
-            butterfly2.style.zIndex = '1000';
-
-            console.log('Butterflies initialized');
-        }
-
-        // Call initializations on load
-        window.addEventListener('load', () => {
-            console.log('Window loaded');
-            createStars();
-            initializeButterflies();
-        });
-
-        // Fallback initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM Content Loaded');
-            const butterfly1 = document.getElementById('butterfly1');
-            const butterfly2 = document.getElementById('butterfly2');
-            
-            if (butterfly1) butterfly1.style.display = 'block';
-            if (butterfly2) butterfly2.style.display = 'block';
-        });
-
+        const butterfly1 = document.getElementById('butterfly1');
+        const butterfly2 = document.getElementById('butterfly2');
+        const butterfly3 = document.getElementById('butterfly3');
         const audio = document.getElementById('background-music');
+
+        // Debugging logs
+        console.log('Butterflies:', butterfly1, butterfly2, butterfly3);
 
         // Function to get random position within window
         function getRandomPosition() {
-            const butterflySize = 50; // Match the CSS font-size
             return {
-                x: Math.random() * (window.innerWidth - butterflySize),
-                y: Math.random() * (window.innerHeight - butterflySize),
+                x: Math.random() * (window.innerWidth - 100),
+                y: Math.random() * (window.innerHeight - 100),
                 dx: (Math.random() - 0.5) * 4,
                 dy: (Math.random() - 0.5) * 4
             };
@@ -112,92 +42,52 @@
         // Initial random positions
         let butterfly1Pos = getRandomPosition();
         let butterfly2Pos = getRandomPosition();
+        let butterfly3Pos = getRandomPosition();
 
         // Immediately set initial positions and start animation
-        const butterfly1 = document.getElementById('butterfly1');
-        const butterfly2 = document.getElementById('butterfly2');
-        
-        // Explicit positioning with large, visible placement
-        butterfly1.style.left = '50%';
-        butterfly1.style.top = '50%';
-        butterfly1.style.transform = 'translate(-50%, -50%)';
-        
-        butterfly2.style.left = '60%';
-        butterfly2.style.top = '60%';
-        butterfly2.style.transform = 'translate(-50%, -50%)';
-        
-        // Force visibility
-        butterfly1.style.display = 'block';
-        butterfly2.style.display = 'block';
-        butterfly1.style.visibility = 'visible';
-        butterfly2.style.visibility = 'visible';
-        
-        console.log('Butterfly 1 final style:', butterfly1.style.cssText);
-        console.log('Butterfly 2 final style:', butterfly2.style.cssText);
+        butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px)`;
+        butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px)`;
+        butterfly3.style.transform = `translate(${butterfly3Pos.x}px, ${butterfly3Pos.y}px)`;
 
         // Audio context setup
         let audioContext, analyser, source;
-        let isAudioInitialized = false;
-
-        function setupAudioContext() {
-            if (isAudioInitialized) return;
-
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-
-                source = audioContext.createMediaElementSource(audio);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
-
-                isAudioInitialized = true;
-                console.log('Audio context successfully set up');
-            } catch (error) {
-                console.error('Error setting up audio context:', error);
-            }
-        }
-
-        // Attempt to play audio on first interaction
-        document.addEventListener('click', function initAudio() {
-            const audio = document.getElementById('background-music');
-            
-            // Only play if not already playing
-            if (audio.paused) {
-                audio.play().then(() => {
-                    console.log('Audio started playing');
-                }).catch(error => {
-                    console.error('Error playing audio:', error);
-                });
-            }
-            
-            // Remove listener after first interaction
-            document.removeEventListener('click', initAudio);
-        });
-
         const bufferLength = 256;
         const dataArray = new Uint8Array(bufferLength);
 
-        // Modify butterfly movement to stay within screen
-        function updateButterfly(x, y, dx, dy) {
-            const butterflySize = 50; // Match the CSS font-size
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
+        function setupAudioContext() {
+            console.log('Setting up audio context');
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 512;
+            
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+        }
 
-            // Stricter boundary checks
-            if (x <= 0 || x >= windowWidth - butterflySize) {
-                dx = -dx;
-                x = Math.max(0, Math.min(x, windowWidth - butterflySize));
+        // Attempt to initialize audio on first interaction
+        document.addEventListener('click', function initAudio() {
+            if (!audioContext) {
+                setupAudioContext();
             }
-            if (y <= 0 || y >= windowHeight - butterflySize) {
+            audio.play().catch(e => console.error('Error playing audio:', e));
+            this.removeEventListener('click', initAudio);
+        });
+
+        function updateButterfly(x, y, dx, dy) {
+            // Bounce off walls
+            if (x <= 0 || x >= window.innerWidth - 50) {
+                dx = -dx;
+                x = Math.max(0, Math.min(x, window.innerWidth - 50));
+            }
+            if (y <= 0 || y >= window.innerHeight - 50) {
                 dy = -dy;
-                y = Math.max(0, Math.min(y, windowHeight - butterflySize));
+                y = Math.max(0, Math.min(y, window.innerHeight - 50));
             }
 
             return { x: x + dx, y: y + dy, dx, dy };
         }
 
-        let animationFrameId;
         function animate() {
             // Get audio data if analyser is available
             if (analyser) {
@@ -210,6 +100,9 @@
                 sum += dataArray[i];
             }
             const average = sum / dataArray.length / 255;
+
+            // Debugging volume
+            console.log('Audio Volume:', average);
 
             // Update butterfly 1
             const butterfly1Update = updateButterfly(
@@ -235,13 +128,60 @@
             butterfly2Pos.dx = butterfly2Update.dx;
             butterfly2Pos.dy = butterfly2Update.dy;
 
+            // Update butterfly 3
+            const butterfly3Update = updateButterfly(
+                butterfly3Pos.x, 
+                butterfly3Pos.y, 
+                butterfly3Pos.dx, 
+                butterfly3Pos.dy
+            );
+            butterfly3Pos.x = butterfly3Update.x;
+            butterfly3Pos.y = butterfly3Update.y;
+            butterfly3Pos.dx = butterfly3Update.dx;
+            butterfly3Pos.dy = butterfly3Update.dy;
+
             // Update visual representation with audio reactivity
             const baseSize = 30;
             const size1 = baseSize + (average * 20);
             const size2 = baseSize + (average * 20);
+            const size3 = baseSize + (average * 20);
 
+            // Add glow effect based on volume
+            const glowIntensity1 = Math.min(1, average * 5);
+            const glowIntensity2 = Math.min(1, average * 5);
+            const glowIntensity3 = Math.min(1, average * 5);
+
+            // Apply transformations and glow
             butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px) scale(${size1 / baseSize})`;
             butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px) scale(${size2 / baseSize})`;
+            butterfly3.style.transform = `translate(${butterfly3Pos.x}px, ${butterfly3Pos.y}px) scale(${size3 / baseSize})`;
+
+            // Glow effect with more logging
+            console.log('Glow Intensities:', glowIntensity1, glowIntensity2, glowIntensity3);
+
+            if (glowIntensity1 > 0.2) {
+                butterfly1.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity1})`;
+                butterfly1.style.color = `rgba(255,255,255,${1 + glowIntensity1})`;
+            } else {
+                butterfly1.style.textShadow = 'none';
+                butterfly1.style.color = 'inherit';
+            }
+
+            if (glowIntensity2 > 0.2) {
+                butterfly2.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity2})`;
+                butterfly2.style.color = `rgba(255,255,255,${1 + glowIntensity2})`;
+            } else {
+                butterfly2.style.textShadow = 'none';
+                butterfly2.style.color = 'inherit';
+            }
+
+            if (glowIntensity3 > 0.2) {
+                butterfly3.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity3})`;
+                butterfly3.style.color = `rgba(255,255,255,${1 + glowIntensity3})`;
+            } else {
+                butterfly3.style.textShadow = 'none';
+                butterfly3.style.color = 'inherit';
+            }
 
             // Continue animation
             animationFrameId = requestAnimationFrame(animate);
@@ -256,6 +196,8 @@
             butterfly1Pos.y = Math.min(butterfly1Pos.y, window.innerHeight - 50);
             butterfly2Pos.x = Math.min(butterfly2Pos.x, window.innerWidth - 50);
             butterfly2Pos.y = Math.min(butterfly2Pos.y, window.innerHeight - 50);
+            butterfly3Pos.x = Math.min(butterfly3Pos.x, window.innerWidth - 50);
+            butterfly3Pos.y = Math.min(butterfly3Pos.y, window.innerHeight - 50);
         });
     </script>
 </body>
