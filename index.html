@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>x_x</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/styles.css">
     <style>
         .glow {
@@ -108,6 +109,7 @@
             // Get audio data if analyser is available
             if (analyser) {
                 analyser.getByteFrequencyData(dataArray);
+                console.log('Frequency Data:', dataArray);
             }
 
             // Calculate average volume
@@ -194,6 +196,9 @@
             const glowIntensity3 = Math.min(1, average * 10);
             const glowIntensity4 = Math.min(1, average * 10);
             const glowIntensity5 = Math.min(1, average * 10);
+
+            // Debugging glow intensity values
+            console.log('Glow Intensities:', glowIntensity1, glowIntensity2, glowIntensity3, glowIntensity4, glowIntensity5);
 
             // Apply transformations and glow
             butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px) scale(${size1 / baseSize})`;
