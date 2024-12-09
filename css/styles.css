@@ -81,3 +81,14 @@ audio {
 audio:hover {
     opacity: 0.6;
 }
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    animation: twinkle 1.5s infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
