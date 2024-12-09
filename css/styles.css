@@ -45,7 +45,7 @@ input[type="range"] {
 
 .butterfly {
     position: fixed;
-    font-size: 30px;
+    font-size: 60px;
     pointer-events: none;
     z-index: 1000;
     filter: 

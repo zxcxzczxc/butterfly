@@ -20,6 +20,8 @@
     <div id="butterfly1" class="butterfly">🦋</div>
     <div id="butterfly2" class="butterfly">🦋</div>
     <div id="butterfly3" class="butterfly">🦋</div>
+    <div id="butterfly4" class="butterfly">🦋</div>
+    <div id="butterfly5" class="butterfly">🦋</div>
     <audio id="background-music" controls>
         <source src="./audio/your-music.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -29,10 +31,12 @@
         const butterfly1 = document.getElementById('butterfly1');
         const butterfly2 = document.getElementById('butterfly2');
         const butterfly3 = document.getElementById('butterfly3');
+        const butterfly4 = document.getElementById('butterfly4');
+        const butterfly5 = document.getElementById('butterfly5');
         const audio = document.getElementById('background-music');
 
         // Debugging logs
-        console.log('Butterflies:', butterfly1, butterfly2, butterfly3);
+        console.log('Butterflies:', butterfly1, butterfly2, butterfly3, butterfly4, butterfly5);
 
         // Function to get random position within window
         function getRandomPosition() {
@@ -48,11 +52,15 @@
         let butterfly1Pos = getRandomPosition();
         let butterfly2Pos = getRandomPosition();
         let butterfly3Pos = getRandomPosition();
+        let butterfly4Pos = getRandomPosition();
+        let butterfly5Pos = getRandomPosition();
 
         // Immediately set initial positions and start animation
         butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px)`;
         butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px)`;
         butterfly3.style.transform = `translate(${butterfly3Pos.x}px, ${butterfly3Pos.y}px)`;
+        butterfly4.style.transform = `translate(${butterfly4Pos.x}px, ${butterfly4Pos.y}px)`;
+        butterfly5.style.transform = `translate(${butterfly5Pos.x}px, ${butterfly5Pos.y}px)`;
 
         // Audio context setup
         let audioContext, analyser, source;
@@ -80,7 +88,7 @@
         });
 
         function updateButterfly(x, y, dx, dy) {
-            const butterflySize = 50; // Account for butterfly size
+            const butterflySize = 60; // Account for butterfly size
             const padding = 10; // Additional padding from screen edges
 
             // Bounce off walls with stricter boundaries
@@ -148,24 +156,54 @@
             butterfly3Pos.dx = butterfly3Update.dx;
             butterfly3Pos.dy = butterfly3Update.dy;
 
+            // Update butterfly 4
+            const butterfly4Update = updateButterfly(
+                butterfly4Pos.x, 
+                butterfly4Pos.y, 
+                butterfly4Pos.dx, 
+                butterfly4Pos.dy
+            );
+            butterfly4Pos.x = butterfly4Update.x;
+            butterfly4Pos.y = butterfly4Update.y;
+            butterfly4Pos.dx = butterfly4Update.dx;
+            butterfly4Pos.dy = butterfly4Update.dy;
+
+            // Update butterfly 5
+            const butterfly5Update = updateButterfly(
+                butterfly5Pos.x, 
+                butterfly5Pos.y, 
+                butterfly5Pos.dx, 
+                butterfly5Pos.dy
+            );
+            butterfly5Pos.x = butterfly5Update.x;
+            butterfly5Pos.y = butterfly5Update.y;
+            butterfly5Pos.dx = butterfly5Update.dx;
+            butterfly5Pos.dy = butterfly5Update.dy;
+
             // Update visual representation with audio reactivity
-            const baseSize = 30;
-            const size1 = baseSize + (average * 20);
-            const size2 = baseSize + (average * 20);
-            const size3 = baseSize + (average * 20);
+            const baseSize = 60;
+            const size1 = baseSize + (average * 50); // Increased from 20 to 50 for more responsiveness
+            const size2 = baseSize + (average * 50);
+            const size3 = baseSize + (average * 50);
+            const size4 = baseSize + (average * 50);
+            const size5 = baseSize + (average * 50);
 
             // Add glow effect based on volume
-            const glowIntensity1 = Math.min(1, average * 5);
-            const glowIntensity2 = Math.min(1, average * 5);
-            const glowIntensity3 = Math.min(1, average * 5);
+            const glowIntensity1 = Math.min(1, average * 10); // Increased from 5 to 10 for more glow
+            const glowIntensity2 = Math.min(1, average * 10);
+            const glowIntensity3 = Math.min(1, average * 10);
+            const glowIntensity4 = Math.min(1, average * 10);
+            const glowIntensity5 = Math.min(1, average * 10);
 
             // Apply transformations and glow
             butterfly1.style.transform = `translate(${butterfly1Pos.x}px, ${butterfly1Pos.y}px) scale(${size1 / baseSize})`;
             butterfly2.style.transform = `translate(${butterfly2Pos.x}px, ${butterfly2Pos.y}px) scale(${size2 / baseSize})`;
             butterfly3.style.transform = `translate(${butterfly3Pos.x}px, ${butterfly3Pos.y}px) scale(${size3 / baseSize})`;
+            butterfly4.style.transform = `translate(${butterfly4Pos.x}px, ${butterfly4Pos.y}px) scale(${size4 / baseSize})`;
+            butterfly5.style.transform = `translate(${butterfly5Pos.x}px, ${butterfly5Pos.y}px) scale(${size5 / baseSize})`;
 
             // Glow effect with more logging
-            console.log('Glow Intensities:', glowIntensity1, glowIntensity2, glowIntensity3);
+            console.log('Glow Intensities:', glowIntensity1, glowIntensity2, glowIntensity3, glowIntensity4, glowIntensity5);
 
             if (glowIntensity1 > 0.2) {
                 butterfly1.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity1})`;
@@ -191,6 +229,22 @@
                 butterfly3.style.color = 'inherit';
             }
 
+            if (glowIntensity4 > 0.2) {
+                butterfly4.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity4})`;
+                butterfly4.style.color = `rgba(255,255,255,${1 + glowIntensity4})`;
+            } else {
+                butterfly4.style.textShadow = 'none';
+                butterfly4.style.color = 'inherit';
+            }
+
+            if (glowIntensity5 > 0.2) {
+                butterfly5.style.textShadow = `0 0 10px rgba(255,255,255,${glowIntensity5})`;
+                butterfly5.style.color = `rgba(255,255,255,${1 + glowIntensity5})`;
+            } else {
+                butterfly5.style.textShadow = 'none';
+                butterfly5.style.color = 'inherit';
+            }
+
             // Continue animation
             animationFrameId = requestAnimationFrame(animate);
         }
@@ -200,12 +254,16 @@
 
         // Resize handler to keep butterflies in view
         window.addEventListener('resize', () => {
-            butterfly1Pos.x = Math.min(butterfly1Pos.x, window.innerWidth - 50);
-            butterfly1Pos.y = Math.min(butterfly1Pos.y, window.innerHeight - 50);
-            butterfly2Pos.x = Math.min(butterfly2Pos.x, window.innerWidth - 50);
-            butterfly2Pos.y = Math.min(butterfly2Pos.y, window.innerHeight - 50);
-            butterfly3Pos.x = Math.min(butterfly3Pos.x, window.innerWidth - 50);
-            butterfly3Pos.y = Math.min(butterfly3Pos.y, window.innerHeight - 50);
+            butterfly1Pos.x = Math.min(butterfly1Pos.x, window.innerWidth - 60);
+            butterfly1Pos.y = Math.min(butterfly1Pos.y, window.innerHeight - 60);
+            butterfly2Pos.x = Math.min(butterfly2Pos.x, window.innerWidth - 60);
+            butterfly2Pos.y = Math.min(butterfly2Pos.y, window.innerHeight - 60);
+            butterfly3Pos.x = Math.min(butterfly3Pos.x, window.innerWidth - 60);
+            butterfly3Pos.y = Math.min(butterfly3Pos.y, window.innerHeight - 60);
+            butterfly4Pos.x = Math.min(butterfly4Pos.x, window.innerWidth - 60);
+            butterfly4Pos.y = Math.min(butterfly4Pos.y, window.innerHeight - 60);
+            butterfly5Pos.x = Math.min(butterfly5Pos.x, window.innerWidth - 60);
+            butterfly5Pos.y = Math.min(butterfly5Pos.y, window.innerHeight - 60);
         });
 
         // Function to create stars
@@ -238,6 +296,38 @@
 
         // Call the createStars function on window load
         window.addEventListener('load', createStars);
+
+        // Add mouse move event listener
+        document.addEventListener('mousemove', (event) => {
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            // Define a larger threshold distance for avoidance
+            const threshold = 150; // Increased from 100 to 150
+
+            // Function to move butterflies away from the mouse with random movement
+            function avoidMouse(butterflyPos) {
+                const dx = butterflyPos.x - mouseX;
+                const dy = butterflyPos.y - mouseY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // If the mouse is within the threshold distance
+                if (distance < threshold) {
+                    // Calculate the angle to move away from the mouse
+                    const angle = Math.atan2(dy, dx);
+                    // Move away by a larger distance with some randomness
+                    butterflyPos.x += Math.cos(angle) * (5 + Math.random() * 5); // Move away by 5-10 pixels
+                    butterflyPos.y += Math.sin(angle) * (5 + Math.random() * 5);
+                }
+            }
+
+            // Move each butterfly away from the mouse
+            avoidMouse(butterfly1Pos);
+            avoidMouse(butterfly2Pos);
+            avoidMouse(butterfly3Pos);
+            avoidMouse(butterfly4Pos);
+            avoidMouse(butterfly5Pos);
+        });
     </script>
 </body>
 </html>
